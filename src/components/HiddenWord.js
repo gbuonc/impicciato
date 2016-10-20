@@ -1,5 +1,4 @@
 import React from 'react';
-
 const Letter = React.createClass({
    getInitialState(){
       return {
@@ -18,7 +17,8 @@ const Letter = React.createClass({
 const HiddenWord= React.createClass({
    getInitialState(){
       return{
-         hiddenWord : []
+         hiddenWord : this.setHiddenWord(this.props.word),
+         lettersLeftToGuess : this.props.word.length-2
       }
    },
    componentWillMount(){
@@ -33,12 +33,20 @@ const HiddenWord= React.createClass({
          obj['visible'] = (i === 0 || i === l-1) ? true : false;
          return obj;
       });
-      this.setState({hiddenWord : hiddenWord});
+      return hiddenWord
+      //this.setState({hiddenWord : hiddenWord});
+   },
+   getLettersToGuess(){
+      return (this.state.hiddenWord.reduce((acc, char)=>{
+         if(char.visible !== true) acc+=1;
+         return acc;
+      },0)
+      )
    },
    inputLetter(selectedLetter){
       let lettersFound = 0;
       const updateHiddenWord = this.state.hiddenWord.map((letterObj) =>{
-         if(letterObj.value === selectedLetter){
+         if(letterObj.value === selectedLetter && letterObj.visible !== true){
             letterObj.visible = true;
             lettersFound+=1;
          }
@@ -52,6 +60,7 @@ const HiddenWord= React.createClass({
       return(
          <div className="hidden-word">
             {this.props.word}
+            <div>{this.getLettersToGuess()} lettere da indovinare </div>
             {this.state.hiddenWord.map((letter) =>{
                return <span className="letter" key={letter.key}>{letter.visible ? letter.value : '_'}</span>
             })}
@@ -59,7 +68,6 @@ const HiddenWord= React.createClass({
             {this.props.alphabet.map((letter) => {
                return <Letter key={letter} inputLetter={this.inputLetter}>{letter}</Letter>
             })}
-
          </div>
       )
    }
