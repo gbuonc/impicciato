@@ -10,7 +10,7 @@ const App = React.createClass({
         <Router history={browserHistory}>
            <Route path="/" component={Home} ></Route>
            <Route path="/gameover/:level/:pts" component={GameOver}></Route>
-           <Route path="/:player/:level" component={Game} />
+           <Route path="/gioca/:level" component={Game} />
            <Route path="*" component={Home}/>
         </Router>
       );

@@ -54,8 +54,17 @@ const Game = React.createClass({
       return (
          <div className="gameWrapper">
             <div className="game-header">
-               <div className="score"><strong>{this.state.pts}</strong> pts</div>
-               {this.getLives(this.state.lives)}
+               <div className="score">
+                  <div className="score-wrapper">
+                     <strong>{this.state.pts}</strong><br/>pts
+                  </div>
+               </div>
+               <div className="level">
+                  Livello <strong>{this.state.level}</strong>
+               </div>
+               <div className="lives">
+                  {this.getLives(this.state.lives)}
+               </div>
             </div>
             <div className="game-area">
                <HiddenWord
@@ -67,7 +76,10 @@ const Game = React.createClass({
                   nextLevel={this.nextLevel}>
                </HiddenWord>
             </div>
-            <button onClick={()=>this.nextLevel()}>Next Level</button>
+            <div className="game-footer">
+               <button onClick={()=>this.nextLevel()}>Next Level</button>
+               game footer
+            </div>
          </div>
       )
    }

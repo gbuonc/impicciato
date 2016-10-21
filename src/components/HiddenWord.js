@@ -51,6 +51,9 @@ const HiddenWord= React.createClass({
       this.props.addPoints(lettersFound*10);
       if(!lettersFound) this.props.loseLife();
    },
+   getLetterWidth(){
+      return 75/(this.state.hiddenWord.length)+'vw';
+   },
    componentDidUpdate(props, state){
       let lettersLeft = this.getLettersToGuess(state.hiddenWord);
       if(lettersLeft===0) {
@@ -58,17 +61,28 @@ const HiddenWord= React.createClass({
       }
    },
    render(){
+      const lettersLeft = this.getLettersToGuess(this.state.hiddenWord);
       return(
          <div className="hidden-word">
-            <em>{this.props.word}</em>
-            <div>{this.getLettersToGuess(this.state.hiddenWord)} lettere da indovinare </div>
-            {this.state.hiddenWord.map((letter) =>{
-               return <span className="letter" key={letter.key}>{letter.visible ? letter.value : '_'}</span>
-            })}
-            <hr/>
-            {this.props.alphabet.map((letter) => {
-               return <Letter key={letter} inputLetter={this.inputLetter}>{letter}</Letter>
-            })}
+            <div className="flex-wrapper">
+               <div className="word-wrapper">
+                  {this.state.hiddenWord.map((letter) =>{
+                     return (
+                        <span className="letter"
+                           key={letter.key}
+                           style={{width:this.getLetterWidth(), fontSize:this.getLetterWidth()}}>
+                           {letter.visible ? letter.value : '_'}
+                        </span>
+                     )
+                  })}
+               </div>
+               <div className="lettersToGuess">{lettersLeft} {lettersLeft > 1 ? 'lettere' : 'lettera'} {lettersLeft > 1 ? 'mancanti' : 'mancante'}</div>
+            </div>
+            <div className="alphabet-wrapper">
+               {this.props.alphabet.map((letter) => {
+                  return <Letter key={letter} inputLetter={this.inputLetter}>{letter}</Letter>
+               })}
+            </div>
          </div>
       )
    }
