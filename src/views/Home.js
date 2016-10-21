@@ -7,7 +7,7 @@ const Home = React.createClass({
       return (
          <div>
             <h1>Home</h1>
-            <Link to={'gioca'}>Gioca</Link>
+            <Link to={'/gioca/1'}>Gioca</Link>
          </div>
 
       )
