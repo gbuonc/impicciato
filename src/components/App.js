@@ -7,7 +7,7 @@ import GameOver from '../views/GameOver';
 const App = React.createClass({
    render(){
       return (
-        <Router history={browserHistory} basename="/impicciato/build">
+        <Router history={browserHistory}>
            <Route path="/" component={Home} ></Route>
            <Route path="/gameover/:level/:pts" component={GameOver}></Route>
            <Route path="/gioca/:level" component={Game} />

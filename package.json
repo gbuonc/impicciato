@@ -2,7 +2,6 @@
   "name": "impicciato",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://gbuonc.github.io/impicciato/build",
   "devDependencies": {
     "react-router": "^2.8.1",
     "react-scripts": "0.6.1"
