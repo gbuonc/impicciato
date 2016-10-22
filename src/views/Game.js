@@ -24,7 +24,7 @@ const Game = React.createClass({
    // -------------------------
    getLives(lives){
       let out = '';
-      for(let i=0; i<lives; i++) out+='● ';
+      for(let i=0; i<lives; i++) out+='✪ ';
       return (
          <div className="lives">{out}</div>
       )
@@ -54,16 +54,31 @@ const Game = React.createClass({
       return (
          <div className="gameWrapper">
             <div className="game-header">
-               <div className="score">
-                  <div className="score-wrapper">
-                     <strong>{this.state.pts}</strong><br/>pts
-                  </div>
-               </div>
-               <div className="level">
-                  Livello <strong>{this.state.level}</strong>
-               </div>
-               <div className="lives">
-                  {this.getLives(this.state.lives)}
+              <div className="game-header-content">
+                 <div className="score">
+                    <div className="score-wrapper">
+                    <div className="abs">
+                      <strong>{this.state.pts}</strong>
+                    </div>
+                       <span>punti</span>
+                    </div>
+                 </div>
+                 <div className="level">
+                   <div className="level-wrapper">
+                     <div className="abs">
+                       <strong>{this.state.level}</strong>
+                     </div>
+                     <span>livello</span>
+                   </div>
+                 </div>
+                 <div className="lives">
+                   <div className="lives-wrapper">
+                    <div className="abs">
+                      <strong>{this.getLives(this.state.lives)}</strong>
+                    </div>
+                    <span>vite</span>
+                    </div>
+                 </div>
                </div>
             </div>
             <div className="game-area">
