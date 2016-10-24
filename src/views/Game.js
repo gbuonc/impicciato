@@ -10,24 +10,53 @@ const state={
    word : '',
    level: 1
 }
+const Score = (score)=>(
+   <div className="score">
+      <div className="score-wrapper">
+         <div className="abs">
+            <strong>{score.points}</strong>
+         </div>
+         <span>punti</span>
+      </div>
+   </div>
+)
+const Lives = (lives)=>{
+   let out = '';
+   for(let i=0; i<lives.left; i++) out+='✪ ';
+   return(
+      <div className="lives">
+         <div className="lives-wrapper">
+            <div className="abs">
+               <strong>{out}</strong>
+            </div>
+            <span>vite</span>
+         </div>
+      </div>
+   )
+}
+const Level = (level)=>(
+   <div className="level">
+      <div className="level-wrapper">
+         <div className="abs">
+            <strong>{level.current}</strong>
+         </div>
+         <span>livello</span>
+      </div>
+   </div>
+)
+
+
 // -------------------------------------
 const Game = React.createClass({
    getInitialState(){
       return state;
    },
-   componentWillMount(){
-      this.getWord();
-   },
+   componentWillMount(){this.timeouts = []; this.getWord()},
+   componentWillUnmount(){this.clearTimeouts()},
+   setTimeout(){this.timeouts.push(setTimeout.apply(null, arguments))},
+   clearTimeouts(){this.timeouts.forEach(clearTimeout)},
    componentWillUpdate(props, state){
       if(state.lives<=0) browserHistory.push(`/gameover/${this.state.level}/${this.state.pts}`)
-   },
-   // -------------------------
-   getLives(lives){
-      let out = '';
-      for(let i=0; i<lives; i++) out+='● ';
-      return (
-         <div className="lives">{out}</div>
-      )
    },
    getWord(){
       const words = dictionary.length;
@@ -41,11 +70,14 @@ const Game = React.createClass({
       this.setState({lives : this.state.lives-1});
    },
    nextLevel(){
-      this.getWord();
-      let newLevel = this.state.level+1;
-      this.setState({level:newLevel}, function(){
-         browserHistory.push('/gioca/'+this.state.level)
-      })
+      this.clearTimeouts();
+      this.setTimeout(function(){
+         this.getWord();
+         let newLevel = this.state.level+1;
+         this.setState({level:newLevel}, function(){
+            browserHistory.push('/game/'+this.state.level)
+         })
+      }.bind(this), 2000);
    },
    newGame(){
       browserHistory.push('/')
@@ -54,16 +86,10 @@ const Game = React.createClass({
       return (
          <div className="gameWrapper">
             <div className="game-header">
-               <div className="score">
-                  <div className="score-wrapper">
-                     <strong>{this.state.pts}</strong><br/>pts
-                  </div>
-               </div>
-               <div className="level">
-                  Livello <strong>{this.state.level}</strong>
-               </div>
-               <div className="lives">
-                  {this.getLives(this.state.lives)}
+               <div className="game-header-content">
+                  <Score points={this.state.pts} />
+                  <Level current={this.state.level} />
+                  <Lives left={this.state.lives} />
                </div>
             </div>
             <div className="game-area">
@@ -78,7 +104,6 @@ const Game = React.createClass({
             </div>
             <div className="game-footer">
                <button onClick={()=>this.nextLevel()}>Next Level</button>
-               game footer
             </div>
          </div>
       )
