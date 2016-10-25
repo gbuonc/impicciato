@@ -58,17 +58,6 @@ const Game = React.createClass({
    componentWillUpdate(props, state){
       if(state.lives<=0) browserHistory.push(`/gameover/${this.state.level}/${this.state.pts}`)
    },
-<<<<<<< HEAD
-=======
-   // -------------------------
-   getLives(lives){
-      let out = '';
-      for(let i=0; i<lives; i++) out+='✪ ';
-      return (
-         <div className="lives">{out}</div>
-      )
-   },
->>>>>>> 2ae2b75cb404ec46583a1983117168f4feaca5dd
    getWord(){
       const words = dictionary.length;
       let randomIndex = Math.floor(Math.random()*words);
@@ -97,38 +86,10 @@ const Game = React.createClass({
       return (
          <div className="gameWrapper">
             <div className="game-header">
-<<<<<<< HEAD
                <div className="game-header-content">
                   <Score points={this.state.pts} />
                   <Level current={this.state.level} />
                   <Lives left={this.state.lives} />
-=======
-              <div className="game-header-content">
-                 <div className="score">
-                    <div className="score-wrapper">
-                    <div className="abs">
-                      <strong>{this.state.pts}</strong>
-                    </div>
-                       <span>punti</span>
-                    </div>
-                 </div>
-                 <div className="level">
-                   <div className="level-wrapper">
-                     <div className="abs">
-                       <strong>{this.state.level}</strong>
-                     </div>
-                     <span>livello</span>
-                   </div>
-                 </div>
-                 <div className="lives">
-                   <div className="lives-wrapper">
-                    <div className="abs">
-                      <strong>{this.getLives(this.state.lives)}</strong>
-                    </div>
-                    <span>vite</span>
-                    </div>
-                 </div>
->>>>>>> 2ae2b75cb404ec46583a1983117168f4feaca5dd
                </div>
             </div>
             <div className="game-area">
