@@ -3,6 +3,7 @@ import dictionary from '../helpers/dictionary';
 import alphabet from '../helpers/alphabet';
 import HiddenWord from '../components/HiddenWord';
 import { browserHistory } from 'react-router';
+import CSSTransitionGroup from 'react-addons-css-transition-group';
 
 const state={
    lives : 8,
@@ -13,10 +14,30 @@ const state={
 const Score = (score)=>(
    <div className="score">
       <div className="score-wrapper">
-         <div className="abs">
-            <strong>{score.points}</strong>
-         </div>
+         <CSSTransitionGroup
+            component="div"
+            className="abs"
+            transitionName="score"
+            transitionEnterTimeout={300}
+            transitionLeaveTimeout={300}>
+            <strong key={score.points}>{score.points}</strong>
+         </CSSTransitionGroup>
          <span>punti</span>
+      </div>
+   </div>
+)
+const Level = (level)=>(
+   <div className="level">
+      <div className="level-wrapper">
+         <CSSTransitionGroup
+            component="div"
+            className="abs"
+            transitionName="level"
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={500}>
+            <strong key={level.current}>{level.current}</strong>
+         </CSSTransitionGroup>
+         <span>livello</span>
       </div>
    </div>
 )
@@ -34,16 +55,6 @@ const Lives = (lives)=>{
       </div>
    )
 }
-const Level = (level)=>(
-   <div className="level">
-      <div className="level-wrapper">
-         <div className="abs">
-            <strong>{level.current}</strong>
-         </div>
-         <span>livello</span>
-      </div>
-   </div>
-)
 
 
 // -------------------------------------

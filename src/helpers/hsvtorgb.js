@@ -4,9 +4,9 @@
 // inspired by http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
 
 	var RColor = function() {
-		this.hue			= Math.random(),
-		this.goldenRatio 	= 0.618033988749895;
-		this.hexwidth		= 2;
+		this.hue = Math.random();
+		this.goldenRatio = 0.618033988749895;
+		this.hexwidth = 2;
 	};
 
 	RColor.prototype.hsvToRgb = function (h,s,v) {
@@ -19,12 +19,16 @@
 			g	= 255,
 			b	= 255;
 		switch(h_i) {
-			case 0:	r = v, g = t, b = p;	break;
+			case 0:
+			r = v, g = t, b = p;
+			break;
 			case 1:	r = q, g = v, b = p;	break;
 			case 2:	r = p, g = v, b = t;	break;
 			case 3:	r = p, g = q, b = v;	break;
 			case 4: r = t, g = p, b = v;	break;
-			case 5: r = v, g = p, b = q;	break;
+			case 5:
+			r = v, g = p, b = q;
+			break;
 		}
 		return [Math.floor(r*256),Math.floor(g*256),Math.floor(b*256)];
 	};

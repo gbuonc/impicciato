@@ -1,7 +1,6 @@
 import React from 'react';
 import HSVtoRGB from '../helpers/hsvtorgb';
 
-
 const Letter = React.createClass({
    getInitialState(){
       return {
@@ -13,9 +12,8 @@ const Letter = React.createClass({
       this.props.inputLetter(this.el.textContent);
    },
    render(){
-      const color = new HSVtoRGB;
+      const color = new HSVtoRGB();
       const bg = color.get(false, 0.1, 0.99);
-      console.log(bg);
       const style={
          borderRadius : '5px',
          borderBottomWidth : 3,
@@ -28,7 +26,8 @@ const Letter = React.createClass({
 const HiddenWord= React.createClass({
    getInitialState(){
       return{
-         hiddenWord : this.setHiddenWord(this.props.word)
+         hiddenWord : this.setHiddenWord(this.props.word),
+         lastInputLetter : ''
       }
    },
    componentWillMount(){this.timeouts = []},
@@ -53,6 +52,24 @@ const HiddenWord= React.createClass({
       },0)
       )
    },
+   getClass(key){
+      // animate last input character by adding class zoom
+      return this.state.lastInputLetter === key ? 'zoom': '';
+   },
+   showLetters(){
+      return this.state.hiddenWord.map((letter, i, arr) =>{
+         //omit class animated on first and last letter because thery're already visible
+         const l = arr.length;
+         const isLetterVisible = (i===0 || i===l-1) ? '' : 'animated';
+         return (
+            <span className={`letter ${isLetterVisible} ${this.getClass(letter.value)}`}
+               key={letter.key}
+               style={{width:this.getLetterWidth(), fontSize:this.getLetterWidth()}}>
+               {letter.visible ? letter.value : '_'}
+            </span>
+         )
+      })
+   },
    inputLetter(selectedLetter){
       let lettersFound = 0;
       const updateHiddenWord = this.state.hiddenWord.map((letterObj) =>{
@@ -62,7 +79,10 @@ const HiddenWord= React.createClass({
          }
          return letterObj;
       });
-      this.setState({hiddenWord : updateHiddenWord});
+      this.setState({
+         hiddenWord : updateHiddenWord,
+         lastInputLetter : selectedLetter
+      });
       this.props.addPoints(lettersFound*10);
       if(!lettersFound){
          //do shake!
@@ -84,24 +104,14 @@ const HiddenWord= React.createClass({
       }.bind(this), 500);
    },
    render(){
-      const lettersLeft = this.getLettersToGuess(this.state.hiddenWord);
       return(
          <div className="hidden-word">
             <div className="flex-wrapper">
                <div className="word-wrapper">
-                  <div ref={(letters)=>this.letters=letters}className={`anim-wrapper animated`}>
-                     {this.state.hiddenWord.map((letter) =>{
-                        return (
-                           <span className="letter"
-                              key={letter.key}
-                              style={{width:this.getLetterWidth(), fontSize:this.getLetterWidth()}}>
-                              {letter.visible ? letter.value : '_'}
-                           </span>
-                        )
-                     })}
+                  <div ref={(letters)=>this.letters=letters} className={`anim-wrapper animated`}>
+                     {this.showLetters()}
                   </div>
                </div>
-               <div className="lettersToGuess">{lettersLeft} {lettersLeft > 1 ? 'lettere' : 'lettera'} {lettersLeft > 1 ? 'mancanti' : 'mancante'}</div>
                {this.props.word}
             </div>
             <div className="alphabet-wrapper">

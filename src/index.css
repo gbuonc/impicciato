@@ -63,17 +63,18 @@ body {
   -webkit-text-fill-color: transparent;
 }
 .score{text-align: left; display: block;}
-.score-wrapper, .level-wrapper{display: inline-block; text-align: center;}
+.score-wrapper, .level-wrapper{display: block;}
 .score-wrapper .abs,
 .level-wrapper .abs,
-.lives-wrapper .abs{width: 100%; height: 3rem; position: relative; margin-bottom: -0.5rem;}
+.lives-wrapper .abs{width: 100%; height: 3rem; position: relative; margin-bottom: -0.5rem; overflow: hidden;}
 .score-wrapper strong,
 .level-wrapper strong{display: block; position: absolute; top:0; font-size: 3rem;}
-.level-wrapper strong{left:50%; transform: translateX(-50%)}
+.level-wrapper strong{left:50%; transform: translate(-50%, 0)}
 .score-wrapper > span,
 .level-wrapper > span,
 .lives-wrapper > span{display: block; font-size: 1rem;}
 .lives-wrapper strong{position: absolute; top:50%; right:0; transform: translateY(-50%);}
+.score{text-align: left;}
 .level{text-align: center;}
 .lives{text-align: right; font-size: 1.2rem; line-height: 1;}
 
@@ -139,3 +140,27 @@ body {
    transform: scale(0.9);
    opacity: 0.4;
 }
+
+/* score animation */
+.score-enter{transition: all 300ms; transform: translateY(-100%);}
+.score-enter-active{transform: translateY(0);}
+.score-leave{transition: all 300ms;transform: translateY(0);}
+.score-leave-active{transform: translateY(100%);}
+
+/* level animation */
+strong.level-enter{transition: all 500ms; left:50%; transform: translate(-50%, -100%);}
+strong.level-enter-active{left:50%; transform: translate(-50%, 0);}
+strong.level-leave{transition: all 500ms;left:50%; transform: translate(-50%, 0);}
+strong.level-leave-active{left:50%; transform: translate(-50%, 100%);}
+
+/* CUSTOM ZOOM ANIM */
+@-webkit-keyframes zoom{
+0%{opacity:0; -webkit-transform:scale(2); transform:scale(2)}
+50%{opacity:1; -webkit-transform:scale(.9); transform:scale(.9)}
+}
+@keyframes zoom{
+   0%{opacity:0; -webkit-transform:scale(2); transform:scale(2)}
+   50%{opacity:1; -webkit-transform:scale(.9); transform:scale(.9)}
+}
+.zoom{-webkit-animation-name:zoom; animation-name:zoom;}
+.animated.zoom{-webkit-animation-duration:250ms; animation-duration:250ms;}
