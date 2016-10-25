@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "impicciato-ed4c3"
+    "default": "impicciato-ed4c3",
+    "impicciato": "impicciato-ed4c3"
   }
 }
