@@ -9,8 +9,8 @@ const App = React.createClass({
       return (
         <Router history={browserHistory}>
            <Route path="/" component={Home} ></Route>
-           <Route path="/gameover/:level/:pts" component={GameOver}></Route>
            <Route path="/game/:level" component={Game} />
+           <Route path="/gameover/:level/:pts" component={GameOver}></Route>
            <Route path="*" component={Home}/>
         </Router>
       );

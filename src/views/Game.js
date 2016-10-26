@@ -1,15 +1,11 @@
 import React from 'react';
+import { browserHistory } from 'react-router';
 import dictionary from '../helpers/dictionary';
-import alphabet from '../helpers/alphabet';
-
 import Score from '../components/stateless/Score';
 import Level from '../components/stateless/Level';
 import Lives from '../components/stateless/Lives';
-import HiddenWord from '../components/HiddenWord';
+import GameUi from '../components/GameUi';
 import Notification from '../components/Notification';
-
-import { browserHistory } from 'react-router';
-
 
 const state={
    lives : 8,
@@ -19,26 +15,20 @@ const state={
    notifications:[]
 }
 
-
-
 // -------------------------------------
 const Game = React.createClass({
    getInitialState(){
       return state;
    },
    componentWillMount(){this.timeouts = []; this.getWord()},
-   componentWillUnmount(){
-      this.clearTimeouts()
-      this.setState(state);
-   },
+   componentWillUnmount(){this.clearTimeouts()},
    setTimeout(){this.timeouts.push(setTimeout.apply(null, arguments))},
    clearTimeouts(){this.timeouts.forEach(clearTimeout)},
    componentWillUpdate(props, state){
       if(state.lives<=0) browserHistory.push(`/gameover/${this.state.level}/${this.state.pts}`)
    },
    getWord(){
-      const words = dictionary.length;
-      let randomIndex = Math.floor(Math.random()*words);
+      let randomIndex = Math.floor(Math.random()*dictionary.length);
       this.setState({word: dictionary[randomIndex].toUpperCase()});
    },
    addPoints(type, value){
@@ -104,14 +94,12 @@ const Game = React.createClass({
                </div>
             </div>
             <div className="game-area">
-               <HiddenWord
+               <GameUi
                   key={this.state.level}
                   word={this.state.word}
                   addPoints={this.addPoints}
                   loseLife={this.loseLife}
-                  nextLevel={this.nextLevel}>
-               </HiddenWord>
-
+                  nextLevel={this.nextLevel} />
             </div>
             <div className="game-footer">
                <button onClick={()=>this.nextLevel()}>Next Level</button>
@@ -123,7 +111,5 @@ const Game = React.createClass({
       )
    }
 })
-Game.contextTypes={
-   router: React.PropTypes.object
-}
+
 export default Game;
