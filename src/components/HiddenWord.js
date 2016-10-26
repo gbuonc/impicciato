@@ -8,6 +8,7 @@ const Letter = React.createClass({
       }
    },
    toggleState(){
+      if('vibrate'  in navigator) navigator.vibrate(20);
       this.setState({disabled : !this.state.disabled})
       this.props.inputLetter(this.el.textContent);
    },
@@ -85,9 +86,10 @@ const HiddenWord= React.createClass({
       });
       this.props.addPoints(lettersFound*10);
       if(!lettersFound){
-         //do shake!
-         this.letters.classList.add('shake');
-         this.props.loseLife();
+        //do shake!
+        if('vibrate' in navigator) navigator.vibrate(300);
+        this.letters.classList.add('shake');
+        this.props.loseLife();
       }
    },
    getLetterWidth(){
