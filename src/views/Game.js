@@ -1,60 +1,24 @@
 import React from 'react';
 import dictionary from '../helpers/dictionary';
 import alphabet from '../helpers/alphabet';
+
+import Score from '../components/stateless/Score';
+import Level from '../components/stateless/Level';
+import Lives from '../components/stateless/Lives';
 import HiddenWord from '../components/HiddenWord';
+import Notification from '../components/Notification';
+
 import { browserHistory } from 'react-router';
-import CSSTransitionGroup from 'react-addons-css-transition-group';
+
 
 const state={
    lives : 8,
    pts : 0,
    word : '',
-   level: 1
+   level: 1,
+   notifications:[]
 }
-const Score = (score)=>(
-   <div className="score">
-      <div className="score-wrapper">
-         <CSSTransitionGroup
-            component="div"
-            className="abs"
-            transitionName="score"
-            transitionEnterTimeout={300}
-            transitionLeaveTimeout={300}>
-            <strong key={score.points}>{score.points}</strong>
-         </CSSTransitionGroup>
-         <span>punti</span>
-      </div>
-   </div>
-)
-const Level = (level)=>(
-   <div className="level">
-      <div className="level-wrapper">
-         <CSSTransitionGroup
-            component="div"
-            className="abs"
-            transitionName="level"
-            transitionEnterTimeout={500}
-            transitionLeaveTimeout={500}>
-            <strong key={level.current}>{level.current}</strong>
-         </CSSTransitionGroup>
-         <span>livello</span>
-      </div>
-   </div>
-)
-const Lives = (lives)=>{
-   let out = '';
-   for(let i=0; i<lives.left; i++) out+='✪ ';
-   return(
-      <div className="lives">
-         <div className="lives-wrapper">
-            <div className="abs">
-               <strong>{out}</strong>
-            </div>
-            <span>vite</span>
-         </div>
-      </div>
-   )
-}
+
 
 
 // -------------------------------------
@@ -63,7 +27,10 @@ const Game = React.createClass({
       return state;
    },
    componentWillMount(){this.timeouts = []; this.getWord()},
-   componentWillUnmount(){this.clearTimeouts()},
+   componentWillUnmount(){
+      this.clearTimeouts()
+      this.setState(state);
+   },
    setTimeout(){this.timeouts.push(setTimeout.apply(null, arguments))},
    clearTimeouts(){this.timeouts.forEach(clearTimeout)},
    componentWillUpdate(props, state){
@@ -74,47 +41,83 @@ const Game = React.createClass({
       let randomIndex = Math.floor(Math.random()*words);
       this.setState({word: dictionary[randomIndex].toUpperCase()});
    },
-   addPoints(points){
-      this.setState({pts : this.state.pts+points});
+   addPoints(type, value){
+      const actualType = value !==0 ? type : null;
+      this.pushNotification(actualType, value);
+      this.setState({pts : this.state.pts+value});
    },
    loseLife(){
       this.setState({lives : this.state.lives-1});
    },
    nextLevel(){
       this.clearTimeouts();
+      let newLevel = this.state.level+1;
       this.setTimeout(function(){
          this.getWord();
-         let newLevel = this.state.level+1;
          this.setState({level:newLevel}, function(){
-            browserHistory.push('/game/'+this.state.level)
+            this.pushNotification('level', this.state.level);
+            browserHistory.push('/game/'+this.state.level);
          })
       }.bind(this), 2000);
    },
-   newGame(){
-      browserHistory.push('/')
+   pushNotification(type, value){
+      const notifications = this.state.notifications;
+      let message;
+      switch(type){
+         case 'points':
+            message = `+${value}pts`;
+         break;
+         case 'combo':
+            message =  `COMBO! +${value}pts`;
+         break;
+         case 'level':
+            const motivation = ['OK', 'GRANDE', 'BRAVO', 'OTTIMO', 'ALLAFACCIA', 'SUPER'];
+            message = `${motivation[Math.floor(Math.random()*motivation.length)]}! Livello ${value}`;
+         break;
+         default:
+            message = '';
+         break;
+      }
+      if(type){
+         const notification = {type, message};
+         notifications.push(notification);
+         // remove old notifications already triggered
+         // if(notifications.length > 3) notifications.shift();
+         this.setState({notifications});
+      }
+   },
+   showNotifications(){
+      return this.state.notifications.map((notification, i)=>{
+         return (
+            <Notification key={i} remove={this.removeNotification}>{notification.message}</Notification>
+         )
+      })
    },
    render(){
       return (
          <div className="gameWrapper">
             <div className="game-header">
                <div className="game-header-content">
-                  <Score points={this.state.pts} />
-                  <Level current={this.state.level} />
-                  <Lives left={this.state.lives} />
+                  <Score>{this.state.pts}</Score>
+                  <Level>{this.state.level}</Level>
+                  <Lives>{this.state.lives}</Lives>
                </div>
             </div>
             <div className="game-area">
                <HiddenWord
                   key={this.state.level}
                   word={this.state.word}
-                  alphabet={alphabet}
                   addPoints={this.addPoints}
                   loseLife={this.loseLife}
                   nextLevel={this.nextLevel}>
                </HiddenWord>
+
             </div>
             <div className="game-footer">
                <button onClick={()=>this.nextLevel()}>Next Level</button>
+            </div>
+            <div className="notifications">
+               {this.showNotifications()}
             </div>
          </div>
       )

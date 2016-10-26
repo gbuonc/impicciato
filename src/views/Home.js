@@ -8,7 +8,6 @@ const Home = React.createClass({
             <h1>L'Impicciato</h1>
             <Link to={'/game/1'}>Gioca</Link>
          </div>
-
       )
    }
 })

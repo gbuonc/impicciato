@@ -1,7 +1,8 @@
 import React from 'react';
+import Keyboard from '../components/stateless/Keyboard';
 import KeyboardLetter from '../components/KeyboardLetter';
 
-const HiddenWord= React.createClass({
+const GameUi= React.createClass({
    getInitialState(){
       return{
          hiddenWord : this.setHiddenWord(this.props.word),
@@ -94,8 +95,9 @@ const HiddenWord= React.createClass({
                </div>
                {this.props.word}
             </div>
+            <Keyboard keys={alphabet}></Keyboard>
          </div>
       )
    }
 });
-export default HiddenWord;
+export default GameUi;
