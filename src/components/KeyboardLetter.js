@@ -6,7 +6,7 @@ const KeyboardLetter = React.createClass({
       }
    },
    inputLetter(){
-      if('vibrate'  in navigator) navigator.vibrate(20);
+      if('vibrate' in navigator) navigator.vibrate(20);
       this.setState({disabled : !this.state.disabled})
       this.props.inputLetter(this.el.textContent);
    },

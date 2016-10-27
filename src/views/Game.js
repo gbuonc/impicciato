@@ -5,14 +5,14 @@ import Score from '../components/stateless/Score';
 import Level from '../components/stateless/Level';
 import Lives from '../components/stateless/Lives';
 import GameUi from '../components/GameUi';
-import Notification from '../components/Notification';
+import Notifications from '../components/Notifications';
 
 const state={
    lives : 8,
    pts : 0,
    word : '',
    level: 1,
-   notifications:[]
+   // notifications:[]
 }
 
 // -------------------------------------
@@ -32,8 +32,6 @@ const Game = React.createClass({
       this.setState({word: dictionary[randomIndex].toUpperCase()});
    },
    addPoints(type, value){
-      const actualType = value !==0 ? type : null;
-      this.pushNotification(actualType, value);
       this.setState({pts : this.state.pts+value});
    },
    loseLife(){
@@ -45,43 +43,9 @@ const Game = React.createClass({
       this.setTimeout(function(){
          this.getWord();
          this.setState({level:newLevel}, function(){
-            this.pushNotification('level', this.state.level);
             browserHistory.push('/game/'+this.state.level);
          })
       }.bind(this), 2000);
-   },
-   pushNotification(type, value){
-      const notifications = this.state.notifications;
-      let message;
-      switch(type){
-         case 'points':
-            message = `+${value}pts`;
-         break;
-         case 'combo':
-            message =  `COMBO! +${value}pts`;
-         break;
-         case 'level':
-            const motivation = ['OK', 'GRANDE', 'BRAVO', 'OTTIMO', 'ALLAFACCIA', 'SUPER'];
-            message = `${motivation[Math.floor(Math.random()*motivation.length)]}! Livello ${value}`;
-         break;
-         default:
-            message = '';
-         break;
-      }
-      if(type){
-         const notification = {type, message};
-         notifications.push(notification);
-         // remove old notifications already triggered
-         // if(notifications.length > 3) notifications.shift();
-         this.setState({notifications});
-      }
-   },
-   showNotifications(){
-      return this.state.notifications.map((notification, i)=>{
-         return (
-            <Notification key={i} remove={this.removeNotification}>{notification.message}</Notification>
-         )
-      })
    },
    render(){
       return (
@@ -104,12 +68,9 @@ const Game = React.createClass({
             <div className="game-footer">
                <button onClick={()=>this.nextLevel()}>Next Level</button>
             </div>
-            <div className="notifications">
-               {this.showNotifications()}
-            </div>
+            <Notifications pts={this.state.pts} level={this.state.level} />
          </div>
       )
    }
 })
-
 export default Game;
