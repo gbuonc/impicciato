@@ -11,8 +11,7 @@ const state={
    lives : 8,
    pts : 0,
    word : '',
-   level: 1,
-   // notifications:[]
+   level: 1
 }
 
 // -------------------------------------
@@ -58,17 +57,12 @@ const Game = React.createClass({
                </div>
             </div>
             <div className="game-area">
-               <GameUi
-                  key={this.state.level}
-                  word={this.state.word}
-                  addPoints={this.addPoints}
-                  loseLife={this.loseLife}
-                  nextLevel={this.nextLevel} />
+               <GameUi key={this.state.level} word={this.state.word} addPoints={this.addPoints} loseLife={this.loseLife} nextLevel={this.nextLevel} />
             </div>
             <div className="game-footer">
                <button onClick={()=>this.nextLevel()}>Next Level</button>
             </div>
-            <Notifications pts={this.state.pts} level={this.state.level} />
+            <Notifications pts={this.state.pts} level={this.state.level} lives={this.state.lives}/>
          </div>
       )
    }
