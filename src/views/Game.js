@@ -6,6 +6,7 @@ import Level from '../components/stateless/Level';
 import Lives from '../components/stateless/Lives';
 import GameUi from '../components/GameUi';
 import Notifications from '../components/Notifications';
+import { Link } from 'react-router';
 
 const state={
    lives : 8,
@@ -60,7 +61,8 @@ const Game = React.createClass({
                <GameUi key={this.state.level} word={this.state.word} addPoints={this.addPoints} loseLife={this.loseLife} nextLevel={this.nextLevel} />
             </div>
             <div className="game-footer">
-               <button onClick={()=>this.nextLevel()}>Next Level</button>
+               {/* <a className="btn" onClick={()=>this.nextLevel()}>Next Level</a> */}
+               <Link className="btn" to={'/'}>Home</Link>
             </div>
             <Notifications pts={this.state.pts} level={this.state.level} lives={this.state.lives}/>
          </div>

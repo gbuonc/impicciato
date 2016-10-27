@@ -60,7 +60,7 @@ const GameUi= React.createClass({
    },
    render(){
       return(
-          <div className="flex-wrapper">
+          <div className="ui-wrapper">
             <div className="word-wrapper">
               <WordLetters doShake={this.state.doShake}
               removeShake={this.removeShake}
@@ -68,7 +68,7 @@ const GameUi= React.createClass({
                lastInputLetter={this.state.lastInputLetter}
                />
             </div>
-            {this.props.word}
+          {/* {this.props.word} */}
             <Keyboard inputLetter={this.inputLetter} />
           </div>
       )

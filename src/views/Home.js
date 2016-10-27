@@ -4,9 +4,9 @@ import { Link } from 'react-router';
 const Home = React.createClass({
    render(){
       return (
-         <div>
-            <h1>L'Impicciato</h1>
-            <Link to={'/game/1'}>Gioca</Link>
+         <div style={{textAlign:'center'}}>
+            <h1>L'Impicc<em>i</em>ato</h1>
+            <Link to={'/game/1'} className="btn">Gioca</Link>
          </div>
       )
    }
