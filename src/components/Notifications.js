@@ -3,6 +3,7 @@ import React from 'react';
 const Notifications = React.createClass({
    getInitialState(){
       return{
+         newLife : false,
          notifications :[]
       }
    },
@@ -10,37 +11,46 @@ const Notifications = React.createClass({
       const ptsDiff = nextProps.pts - this.props.pts;
       const levelDiff = nextProps.level - this.props.level;
       const livesDiff = nextProps.lives - this.props.lives;
+      const combo = nextProps.combo;
       let type;
       if(ptsDiff > 0){
-         type = ptsDiff > 10 ? 'combo' : 'normal';
-         this.pushNotification(type, ptsDiff);
+         type = combo > 1 ? 'combo' : 'normal';
+         this.pushNotification(type, ptsDiff, combo);
       }
       if(levelDiff > 0){
          type = 'level';
-         this.pushNotification(type, Number(this.props.level)+1);
+         this.pushNotification(type, Number(this.props.level)+1, livesDiff);
       }
+
+      if(livesDiff > 0){this.setState({newLife : true})};
+      if(livesDiff === 0){this.setState({newLife : false})};
       if(livesDiff < 0){
-         this.pushNotification('clear');
+          this.setState({newLife : false})
+          this.pushNotification('clear');
       }
    },
-   pushNotification(type, value){
-      let message;
+   pushNotification(type, value, combo){
+      let message, row2, row3;
       switch(type){
          case 'normal':
             message = `+${value}pts`;
          break;
          case 'combo':
-            message =  `COMBO! +${value}pts`;
+            message =  `COMBO ${combo}!`;
+            row2 = `+${value}pts`;
          break;
          case 'level':
             const motivation = ['OK', 'GRANDE', 'BRAVO', 'OTTIMO', 'ALLAFACCIA', 'SUPER'];
-            message = `${motivation[Math.floor(Math.random()*motivation.length)]}! Livello ${Number(this.props.level)+1}`;
+            const nextLevel = Number(this.props.level)+1;
+            message = `${motivation[Math.floor(Math.random()*motivation.length)]}!`;
+            row2 = `Livello ${nextLevel}`;
+            if(this.state.newLife) row3 =`+ 1 vita`;
          break;
          default:
             message = '';
          break;
       }
-      const notification = {type, message};
+      const notification = {type, message, row2, row3};
       // remove old notifications already triggered
       const triggeredNotifications = this.state.notifications;
       if(triggeredNotifications.length > 3) triggeredNotifications.shift();
@@ -55,7 +65,7 @@ const Notifications = React.createClass({
    },
    darkenColor(col, amt) {
     var usePound = false;
-    if (col[0] == "#") {
+    if (col[0] === "#") {
         col = col.slice(1);
         usePound = true;
     }
@@ -81,7 +91,10 @@ const Notifications = React.createClass({
          }
          return (
             <div key={Date.now()} className="notification-content bounceInOut" style={notificationStyle}>
-               {notification.message}
+                <div>{notification.message}</div>
+                <div>{notification.row2}</div>
+                <div>{notification.row3}</div>
+               
             </div>
          )
       })

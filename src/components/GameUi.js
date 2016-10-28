@@ -41,7 +41,7 @@ const GameUi= React.createClass({
          hiddenWord : updateHiddenWord,
          lastInputLetter : selectedLetter
       });
-      this.props.addPoints(lettersFound*points);
+      this.props.addPoints(lettersFound, points);
       if(!lettersFound){
         if('vibrate' in navigator) navigator.vibrate([150,150,300]);
         this.setState({doShake:true});
@@ -67,7 +67,7 @@ const GameUi= React.createClass({
                lastInputLetter={this.state.lastInputLetter}
                />
             </div>
-          {/* {this.props.word} */}
+          {this.props.word}
             <Keyboard inputLetter={this.inputLetter} />
           </div>
       )

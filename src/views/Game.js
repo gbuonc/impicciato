@@ -11,6 +11,7 @@ import { Link } from 'react-router';
 const state={
    lives : 10,
    pts : 0,
+   combo: 1,
    word : '',
    level: 1
 }
@@ -31,8 +32,16 @@ const Game = React.createClass({
       let randomIndex = Math.floor(Math.random()*dictionary.length);
       this.setState({word: dictionary[randomIndex].toUpperCase()});
    },
-   addPoints(value){
-      this.setState({pts : this.state.pts+value});
+   addPoints(lettersFound, points){
+      const pointsToAdd =  lettersFound > 0 ? lettersFound*points+(10*(lettersFound-1)) : 0;
+      this.setState({
+          pts : this.state.pts+pointsToAdd,
+          combo : lettersFound
+        });
+   },
+   winLife(){
+       // max 10 lives
+       if(this.state.lives < 10) this.setState({lives : this.state.lives+1});
    },
    loseLife(){
       this.setState({lives : this.state.lives-1});
@@ -42,6 +51,8 @@ const Game = React.createClass({
       let newLevel = this.state.level+1;
       this.setTimeout(function(){
          this.getWord();
+         // win a life every 3 levels
+         if(newLevel%3 === 0) this.winLife();
          this.setState({level:newLevel}, function(){
             browserHistory.push('/game/'+this.state.level);
          })
@@ -64,7 +75,7 @@ const Game = React.createClass({
                {/* <a className="btn" onClick={()=>this.nextLevel()}>Next Level</a> */}
                <Link className="btn" to={'/'}>Home</Link>
             </div>
-            <Notifications pts={this.state.pts} level={this.state.level} lives={this.state.lives}/>
+            <Notifications pts={this.state.pts} combo={this.state.combo} level={this.state.level} lives={this.state.lives} />
          </div>
       )
    }
