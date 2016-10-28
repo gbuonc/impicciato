@@ -1,0 +1,17 @@
+{
+  "name": "L'Impicciato",
+  "short_name": "L'Impicciato",
+  "start_url": "/",
+  "scope":"/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#e55006",
+  "background_color": "#FAF1E0",
+  "icons": [
+    {
+      "src": "/public/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -5,8 +5,13 @@ const KeyboardLetter = React.createClass({
          disabled : false
       }
    },
+   componentWillReceiveProps(props){
+      // disable letter when set by help button
+      if(props.disabled === this.props.children) this.setState({disabled : true});
+   },
    inputLetter(letter, points){
       if('vibrate' in navigator) navigator.vibrate(20);
+      // disable clicked button
       this.setState({disabled : !this.state.disabled})
       this.props.inputLetter(letter, points);
    },

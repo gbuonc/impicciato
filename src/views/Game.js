@@ -1,19 +1,16 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 import dictionary from '../helpers/dictionary';
-import Score from '../components/stateless/Score';
-import Level from '../components/stateless/Level';
-import Lives from '../components/stateless/Lives';
 import GameUi from '../components/GameUi';
 import Notifications from '../components/Notifications';
-import { Link } from 'react-router';
 
 const state={
    lives : 10,
    pts : 0,
    combo: 1,
    word : '',
-   level: 1
+   level: 1,
+   helps: 3
 }
 
 // -------------------------------------
@@ -26,7 +23,7 @@ const Game = React.createClass({
    setTimeout(){this.timeouts.push(setTimeout.apply(null, arguments))},
    clearTimeouts(){this.timeouts.forEach(clearTimeout)},
    componentWillUpdate(props, state){
-      if(state.lives<=0) browserHistory.push(`/gameover/${this.state.level}/${this.state.pts}`)
+      if(state.lives<=0) this.endGame();
    },
    getWord(){
       let randomIndex = Math.floor(Math.random()*dictionary.length);
@@ -49,34 +46,31 @@ const Game = React.createClass({
    nextLevel(){
       this.clearTimeouts();
       let newLevel = this.state.level+1;
+      // win a life every 4 levels
+      if(newLevel%4 === 0) this.winLife();
       this.setTimeout(function(){
          this.getWord();
-         // win a life every 3 levels
-         if(newLevel%3 === 0) this.winLife();
+         // add 1 help for level
+         this.updateHelp(1);
          this.setState({level:newLevel}, function(){
             browserHistory.push('/game/'+this.state.level);
          })
+      }.bind(this), 1600);
+   },
+   endGame(){
+      this.setTimeout(function(){
+         browserHistory.push(`/gameover/${this.state.level}/${this.state.pts}`);
       }.bind(this), 2000);
+   },
+   updateHelp(number){
+      this.setState({helps : this.state.helps + number});
    },
    render(){
       return (
-         <div className="gameWrapper">
-            <div className="game-header">
-               <div className="game-header-content">
-                  <Score>{this.state.pts}</Score>
-                  <Level>{this.state.level}</Level>
-                  <Lives>{this.state.lives}</Lives>
-               </div>
-            </div>
-            <div className="game-area">
-               <GameUi key={this.state.level} word={this.state.word} addPoints={this.addPoints} loseLife={this.loseLife} nextLevel={this.nextLevel} />
-            </div>
-            <div className="game-footer">
-               {/* <a className="btn" onClick={()=>this.nextLevel()}>Next Level</a> */}
-               <Link className="btn" to={'/'}>Home</Link>
-            </div>
-            <Notifications pts={this.state.pts} combo={this.state.combo} level={this.state.level} lives={this.state.lives} />
-         </div>
+         <span style={{width:'100%'}}>
+            <GameUi {...this.state} key={this.state.level} addPoints={this.addPoints} loseLife={this.loseLife} nextLevel={this.nextLevel} updateHelp={this.updateHelp}/>
+            <Notifications {...this.state} />
+         </span>
       )
    }
 })

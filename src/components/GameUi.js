@@ -1,6 +1,11 @@
 import React from 'react';
+import Score from '../components/stateless/Score';
+import Level from '../components/stateless/Level';
+import Lives from '../components/stateless/Lives';
 import Keyboard from '../components/stateless/Keyboard';
 import WordLetters from '../components/stateless/WordLetters';
+import { Link } from 'react-router';
+
 const GameUi= React.createClass({
    getInitialState(){
       return{
@@ -41,11 +46,21 @@ const GameUi= React.createClass({
          hiddenWord : updateHiddenWord,
          lastInputLetter : selectedLetter
       });
-      this.props.addPoints(lettersFound, points);
+      if(points) this.props.addPoints(lettersFound, points);
       if(!lettersFound){
         if('vibrate' in navigator) navigator.vibrate([150,150,300]);
         this.setState({doShake:true});
         this.props.loseLife();
+      }
+   },
+   triggerHelp(){
+      var letters = this.state.hiddenWord.filter((letter) => {
+         return !letter.visible;
+      }).map((letter)=>letter.value);
+      if(letters.length >0){
+         const randomLetter = letters[Math.floor(Math.random()*letters.length)];
+         this.inputLetter(randomLetter, 0);
+         this.props.updateHelp(-1)
       }
    },
    componentDidUpdate(props, prevState){
@@ -54,22 +69,36 @@ const GameUi= React.createClass({
          this.props.nextLevel();
       }
    },
-   setClassList(shakeClasses){
-      return `anim-wrapper ${shakeClasses}`;
-   },
    render(){
       return(
-          <div className="ui-wrapper">
-            <div className="word-wrapper">
-              <WordLetters doShake={this.state.doShake}
-              removeShake={this.removeShake}
-               hiddenWord={this.state.hiddenWord}
-               lastInputLetter={this.state.lastInputLetter}
-               />
+         <div className="gameWrapper">
+            <div className="game-header">
+               <div className="game-header-content">
+                  <Score>{this.props.pts}</Score>
+                  <Level>{this.props.level}</Level>
+                  <Lives>{this.props.lives}</Lives>
+               </div>
             </div>
-          {this.props.word}
-            <Keyboard inputLetter={this.inputLetter} />
-          </div>
+            <div className="game-area">
+               <div className="ui-wrapper">
+                  <div className="word-wrapper">
+                     <WordLetters doShake={this.state.doShake}
+                        removeShake={this.removeShake}
+                        hiddenWord={this.state.hiddenWord}
+                        lastInputLetter={this.state.lastInputLetter}
+                     />
+                  </div>
+                  {/* {this.props.word} */}
+                  <Keyboard inputLetter={this.inputLetter} disabledLetter={this.state.lastInputLetter}/>
+               </div>
+            </div>
+            <div className="game-footer">
+               {/* <a className="btn" onClick={()=>this.props.nextLevel()}>Next Level</a> */}
+               <Link className="btn" to={'/'}>Home</Link>
+               <button className="btn help-btn" onClick={()=>this.triggerHelp()} disabled={this.props.helps === 0}>Aiuto<small>({this.props.helps})</small></button>
+            </div>
+
+         </div>
       )
    }
 });

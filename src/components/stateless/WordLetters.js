@@ -1,6 +1,13 @@
 import React from 'react';
 
 const WordLetters = React.createClass({
+  getLetterWidth(){
+     return 75/(this.props.hiddenWord.length)+'vw';
+  },
+  getClass(key){
+     // animate last input character by adding class zoom
+     return this.props.lastInputLetter === key ? 'zoom': '';
+  },
   showLetters(){
      return this.props.hiddenWord.map((letter, i, arr) =>{
         //omit class animated on first and last letter because thery're already visible
@@ -14,13 +21,6 @@ const WordLetters = React.createClass({
            </span>
         )
      })
-  },
-  getLetterWidth(){
-     return 75/(this.props.hiddenWord.length)+'vw';
-  },
-  getClass(key){
-     // animate last input character by adding class zoom
-     return this.props.lastInputLetter === key ? 'zoom': '';
   },
   render(){
     return (

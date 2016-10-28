@@ -3,7 +3,6 @@ import React from 'react';
 const Notifications = React.createClass({
    getInitialState(){
       return{
-         newLife : false,
          notifications :[]
       }
    },
@@ -11,6 +10,7 @@ const Notifications = React.createClass({
       const ptsDiff = nextProps.pts - this.props.pts;
       const levelDiff = nextProps.level - this.props.level;
       const livesDiff = nextProps.lives - this.props.lives;
+      const helpDiff = nextProps.helps - this.props.helps;
       const combo = nextProps.combo;
       let type;
       if(ptsDiff > 0){
@@ -19,18 +19,17 @@ const Notifications = React.createClass({
       }
       if(levelDiff > 0){
          type = 'level';
-         this.pushNotification(type, Number(this.props.level)+1, livesDiff);
+         this.pushNotification(type, Number(this.props.level)+1, combo, livesDiff);
       }
-
-      if(livesDiff > 0){this.setState({newLife : true})};
-      if(livesDiff === 0){this.setState({newLife : false})};
-      if(livesDiff < 0){
-          this.setState({newLife : false})
+      if(livesDiff < 0 || helpDiff != 0){
           this.pushNotification('clear');
       }
+      if(livesDiff > 0){
+          this.pushNotification('newLife');
+      }
    },
-   pushNotification(type, value, combo){
-      let message, row2, row3;
+   pushNotification(type, value, combo, livesDiff){
+      let message, row2;
       switch(type){
          case 'normal':
             message = `+${value}pts`;
@@ -44,20 +43,24 @@ const Notifications = React.createClass({
             const nextLevel = Number(this.props.level)+1;
             message = `${motivation[Math.floor(Math.random()*motivation.length)]}!`;
             row2 = `Livello ${nextLevel}`;
-            if(this.state.newLife) row3 =`+ 1 vita`;
+         break;
+         case 'newLife':
+            message =`+ 1 vita!`;
          break;
          default:
             message = '';
          break;
       }
-      const notification = {type, message, row2, row3};
+      const notification = {type, message, row2};
       // remove old notifications already triggered
       const triggeredNotifications = this.state.notifications;
       if(triggeredNotifications.length > 3) triggeredNotifications.shift();
       triggeredNotifications.push(notification);
       const singleNotification = [];
       singleNotification.push(notification);
-      this.setState({notifications : singleNotification});
+      this.setState({
+         notifications : singleNotification
+      });
    },
    notificationColor(){
       var colorsArr=['#69D2E7','#A7DBD8', '#E0E4CC', '#F38630', '#FA6900', '#FE4365', '#FC9D9A', '#F9CDAD', '#C8C8A9', '#83AF9B'];
@@ -91,10 +94,9 @@ const Notifications = React.createClass({
          }
          return (
             <div key={Date.now()} className="notification-content bounceInOut" style={notificationStyle}>
-                <div>{notification.message}</div>
-                <div>{notification.row2}</div>
-                <div>{notification.row3}</div>
-               
+               <div>{notification.message}</div>
+               <div>{notification.row2}</div>
+               <div>{notification.row3}</div>
             </div>
          )
       })
