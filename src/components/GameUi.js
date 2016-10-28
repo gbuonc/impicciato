@@ -27,7 +27,7 @@ const GameUi= React.createClass({
       },0)
       )
    },
-   inputLetter(selectedLetter){
+   inputLetter(selectedLetter, points){
       let lettersFound = 0;
       this.setState({doShake:false});
       const updateHiddenWord = this.state.hiddenWord.map((letterObj) =>{
@@ -41,8 +41,7 @@ const GameUi= React.createClass({
          hiddenWord : updateHiddenWord,
          lastInputLetter : selectedLetter
       });
-      var scoreType = lettersFound > 1 ? 'combo' : 'points';
-      this.props.addPoints(scoreType, lettersFound*10);
+      this.props.addPoints(lettersFound*points);
       if(!lettersFound){
         if('vibrate' in navigator) navigator.vibrate([150,150,300]);
         this.setState({doShake:true});

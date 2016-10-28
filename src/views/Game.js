@@ -9,7 +9,7 @@ import Notifications from '../components/Notifications';
 import { Link } from 'react-router';
 
 const state={
-   lives : 8,
+   lives : 10,
    pts : 0,
    word : '',
    level: 1
@@ -31,7 +31,7 @@ const Game = React.createClass({
       let randomIndex = Math.floor(Math.random()*dictionary.length);
       this.setState({word: dictionary[randomIndex].toUpperCase()});
    },
-   addPoints(type, value){
+   addPoints(value){
       this.setState({pts : this.state.pts+value});
    },
    loseLife(){

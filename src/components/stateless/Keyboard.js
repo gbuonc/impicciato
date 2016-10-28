@@ -5,7 +5,7 @@ const Keyboard = (props)=>{
    return (
       <div className="keyboard">
           {alphabet.map((letter) => {
-            return <KeyboardLetter key={letter} inputLetter={props.inputLetter}>{letter}</KeyboardLetter>
+            return <KeyboardLetter key={letter.char} inputLetter={props.inputLetter} points={letter.multip}>{letter.char}</KeyboardLetter>
          })}
       </div>
    )

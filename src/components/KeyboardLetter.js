@@ -5,13 +5,15 @@ const KeyboardLetter = React.createClass({
          disabled : false
       }
    },
-   inputLetter(){
+   inputLetter(letter, points){
       if('vibrate' in navigator) navigator.vibrate(20);
       this.setState({disabled : !this.state.disabled})
-      this.props.inputLetter(this.el.textContent);
+      this.props.inputLetter(letter, points);
    },
    render(){
-      return <button onClick={()=>this.inputLetter()} disabled={this.state.disabled} ref={(el)=>this.el=el}>{this.props.children}</button>
+     const char = this.props.children;
+     const points = this.props.points;
+      return <button onClick={()=>this.inputLetter(char, points)} disabled={this.state.disabled}>{char}</button>
    }
 });
 export default KeyboardLetter;
