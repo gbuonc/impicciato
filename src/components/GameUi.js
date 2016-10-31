@@ -87,6 +87,7 @@ const GameUi= React.createClass({
                         hiddenWord={this.state.hiddenWord}
                         lastInputLetter={this.state.lastInputLetter}
                      />
+                     <div className="category">{this.props.category}</div>
                   </div>
                   {/* {this.props.word} */}
                   <Keyboard inputLetter={this.inputLetter} disabledLetter={this.state.lastInputLetter}/>

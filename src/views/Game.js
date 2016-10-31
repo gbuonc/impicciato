@@ -1,6 +1,6 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
-import dictionary from '../helpers/dictionary';
+import dictionary from '../dictionary/dictionary';
 import GameUi from '../components/GameUi';
 import Notifications from '../components/Notifications';
 
@@ -9,6 +9,7 @@ const state={
    pts : 0,
    combo: 1,
    word : '',
+   category:'',
    level: 1,
    helps: 3
 }
@@ -26,8 +27,13 @@ const Game = React.createClass({
       if(state.lives<=0) this.endGame();
    },
    getWord(){
-      let randomIndex = Math.floor(Math.random()*dictionary.length);
-      this.setState({word: dictionary[randomIndex].toUpperCase()});
+      // first get a random category
+      const categories = Object.keys(dictionary);
+      const category = categories[Math.floor(Math.random()*categories.length)];
+      // remove a word from this category and set as playing word
+      const randomIndex = Math.floor(Math.random()*dictionary[category].length);
+      var word = dictionary[category].splice(randomIndex, 1)[0].toUpperCase();
+      this.setState({word, category});
    },
    addPoints(lettersFound, points){
       const pointsToAdd =  lettersFound > 0 ? lettersFound*points+(10*(lettersFound-1)) : 0;
