@@ -4,39 +4,39 @@ import { Link } from 'react-router';
 const GameOver = React.createClass({
   getInitialState(){
     return {
-      highScore: JSON.parse(localStorage.getItem('highScore')) || 0,
-      highLevel: JSON.parse(localStorage.getItem('highLevel')) || 0,
       newRecord : false
     }
   },
   componentDidMount(){
     const game = this.props.routeParams;
-    if(game.pts > this.state.highScore || game.level > this.state.highLevel){
-      if(game.pts > this.state.highScore) localStorage.setItem('highScore', JSON.stringify(game.pts));
-      if(game.level > this.state.highLevel) localStorage.setItem('highLevel', JSON.stringify(game.level));
+    const highScore = Number(JSON.parse(localStorage.getItem('highScore') || 0));
+    const highLevel = Number(JSON.parse(localStorage.getItem('highLevel') || 0));
+    console.log(highScore, highLevel);
+    if(game.pts > highScore){
+      localStorage.setItem('highScore', JSON.stringify(game.pts));
       this.setState({
-        highScore : game.pts > this.state.highScore ? game.pts : this.state.highScore,
-        highLevel : game.level > this.state.highLevel ? game.level : this.state.highLevel,
-        newRecord : true
+         newRecord : true
       })
-    }
-    else{
+   }else{
       this.setState({
         newRecord : false
       })
-    }
+   }
+   if(game.level > highLevel) localStorage.setItem('highLevel', JSON.stringify(game.level));
   },
   renderScore(){
     const game = this.props.routeParams;
+    const highScore = Number(JSON.parse(localStorage.getItem('highScore') || 0));
+    const highLevel = Number(JSON.parse(localStorage.getItem('highLevel') || 0));
     if(this.state.newRecord){
       return(
-        <div style={{marginBottom: 30}}>NUOVO RECORD! <br/>{this.state.highScore} punti - Livello {this.state.highLevel}</div>
+        <div style={{marginBottom: 30}} className="bounceIn">NUOVO RECORD! <br/><strong>{game.pts} punti</strong> - Livello {game.level}</div>
       )
     }
     return(
       <div>
-      <div style={{fontSize:'0.8em', marginBottom: 30}}>Il tuo punteggio:<br />Livello {game.level} - {game.pts} punti</div>
-      <div style={{marginBottom: 30}}>RECORD DA BATTERE: <br/>Livello {this.state.highLevel} - {this.state.highScore} punti</div>
+         <div style={{fontSize:'0.8em', marginBottom: 30}}>Il tuo punteggio:<br />Livello {game.level} - {game.pts} punti</div>
+         <div style={{marginBottom: 30}}>RECORD DA BATTERE: <br/>Livello {highLevel} - {highScore} punti</div>
       </div>
     )
   },
