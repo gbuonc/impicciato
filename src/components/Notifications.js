@@ -21,7 +21,7 @@ const Notifications = React.createClass({
          type = 'level';
          this.pushNotification(type, Number(this.props.level)+1, combo, livesDiff);
       }
-      if(livesDiff < 0 || helpDiff != 0){
+      if(livesDiff < 0 || helpDiff !== 0){
           this.pushNotification('clear');
       }
       if(livesDiff > 0){

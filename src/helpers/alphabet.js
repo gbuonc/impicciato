@@ -21,6 +21,7 @@ const alphabet = [
   {char:'T', multip: 7},
   {char:'U', multip: 7},
   {char:'V', multip: 7},
+  {char:'W', multip: 10},
   {char:'X', multip: 10},
   {char:'Y', multip: 10},
   {char:'Z', multip: 10}];

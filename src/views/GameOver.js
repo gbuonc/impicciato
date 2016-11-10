@@ -41,7 +41,6 @@ const GameOver = React.createClass({
     )
   },
    render(){
-      const game = this.props.routeParams;
       return (
          <div style={{textAlign:'center'}}>
 
